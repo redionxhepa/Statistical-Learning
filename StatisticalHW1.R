@@ -117,7 +117,7 @@ print("Plot 1")  # for debugging purpouses
  vec1=c(1,2,3)
  vec2=c(1,1,1)
  rss = function(vector_predicted,vector_true){
-    return (sum(((vector_predicted-vector_true)^2)))
+     return (sum(((vector_predicted-vector_true)^2))/length(vector_predicted))
 
  }
  print(rss(vec1,vec2))
@@ -126,6 +126,39 @@ print("Plot 1")  # for debugging purpouses
  # print("*************************************")
  # print("*************************************")
  print("Question 4.6")
+ print("Question 4.6")
+ 
+ #create the dataset
+ training_data=ozone[trainset,]
+ test_data=ozone[testset,]
+ print("Training and test datasets created")
+ 
+ # #train the model
+ #             #at 0 u have the ozone(the y variable),(1,2,3 are the respective features radiation,temperature and wind)
+linearModel=lm(ozone~radiation+temperature+wind, data=training_data)
+print(linearModel)
+#print(summary(linearModel))
+
+#test the model
+predictions=predict(linearModel, newdata =test_data)
+print("Predictions")
+print(predictions)
+
+#calculate the RSS  (do we have to do it for training data ?????)
+                 #predictions        ,#ozone data from the training data
+RSS_test =rss(predictions,unname(unlist(test_data["ozone"])))
+print("Rss for the test data ")
+print(RSS_test)
+#perform correlation
+correlations=cor(predictions,unname(unlist(test_data["ozone"])), use = "everything",
+                 method = c("pearson"))
+print("Pearson correlation")
+print(correlations)
+
+#the scatter plot 
+plot(seq(1,31,1),predictions, main = "Scatter plot",
+     xlab = "data point", ylab = "level",frame = FALSE,)
+points(seq(1,31,1),unname(unlist(test_data["ozone"])),col="red")
  
  
 
