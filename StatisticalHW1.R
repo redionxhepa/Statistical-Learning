@@ -2,6 +2,8 @@
 #Redion Xhepa and Anurag
 #Elements of Statistrical Learning HW1
 
+#library for KNN
+library(FNN)
 
 #Presume that the data is downloaded and it placed at the local directory
 datasetOzone=load("ozone.RData")
@@ -144,6 +146,7 @@ predictions=predict(linearModel, newdata =test_data)
 print("Predictions")
 print(predictions)
 
+
 #calculate the RSS  (do we have to do it for training data ?????)
                  #predictions        ,#ozone data from the training data
 RSS_test =rss(predictions,unname(unlist(test_data["ozone"])))
@@ -159,8 +162,26 @@ print(correlations)
 plot(seq(1,31,1),predictions, main = "Scatter plot",
      xlab = "data point", ylab = "level",frame = FALSE,)
 points(seq(1,31,1),unname(unlist(test_data["ozone"])),col="red")
- 
- 
+
+
+
+print("Question 4.7")
+
+RSS_final_test = vector()
+RSS_final_train = vector()
+
+for (i in 1:30) {
+     predictions_test = FNN::knn.reg(train=training_data[,2:4], test = test_data[,2:4], y = training_data[,1], k = i)
+     RSS_final_test[i] = rss(predictions_test$pred, unname(unlist(test_data[1])))
+     predictions_train = FNN::knn.reg(train=training_data[,2:4], test = training_data[,2:4], y = training_data[,1], k = i)
+     RSS_final_train[i] = rss(predictions_train$pred, unname(unlist(training_data[1])))
+}
+
+plot(seq(1,30,1),RSS_final_train, main = "Scatter plot for RSS in Train vs Test time",
+     xlab = "'k' neighbors", ylab = "RSS",frame = FALSE,)
+points(seq(1,30,1),RSS_final_test,col="red")
+
+
 
 
  
